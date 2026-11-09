@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>The Infinite Receipt Printer 🧾⚙️</title>
+  <meta name="description" content="A thermal receipt printer continually spitting out absurd itemized life charges with screeching stepper motors, barcode scanners, and tear-off paper physics.">
+  <!-- Custom inline SVG Favicon matching thermal receipt & printer theme -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='8' width='48' height='30' rx='6' fill='%23d8d4cd' stroke='%23333' stroke-width='2'/%3E%3Crect x='16' y='14' width='32' height='10' rx='2' fill='%231e3321'/%3E%3Ccircle cx='20' cy='19' r='2' fill='%2355f36e'/%3E%3Crect x='12' y='32' width='40' height='4' fill='%23111'/%3E%3Cpath d='M14 36 L14 58 L18 55 L22 58 L26 55 L30 58 L34 55 L38 58 L42 55 L46 58 L50 55 L50 36 Z' fill='%23faf8f2' stroke='%23333' stroke-width='1.5'/%3E%3Cline x1='18' y1='41' x2='38' y2='41' stroke='%23333' stroke-width='1.5' stroke-dasharray='2 2'/%3E%3Cline x1='18' y1='46' x2='46' y2='46' stroke='%23333' stroke-width='1.5' stroke-dasharray='3 2'/%3E%3Cline x1='18' y1='51' x2='42' y2='51' stroke='%23333' stroke-width='1.5'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Canvas for Easter Egg & Shredder Confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Laser Scanner Beam Overlay -->
+  <div id="laser-overlay" class="laser-beam-overlay">
+    <div id="laser-line" class="laser-beam-line"></div>
+  </div>
+
+  <!-- Top Sticky Navigation -->
+  <header class="top-nav">
+    <div class="brand-section">
+      <span class="brand-icon">🧾</span>
+      <div>
+        <div class="brand-title">THE INFINITE RECEIPT PRINTER</div>
+        <div class="brand-subtitle">SUPERMARKET OF EXISTENCE #404 // POS-9000</div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <button id="easter-egg-btn" class="hud-btn easter-egg-btn" title="Audit From The Universe (Hotkey: E)">
+        ✨ <span>Universe Audit [E]</span>
+      </button>
+      <button id="sound-btn" class="hud-btn" title="Toggle Synthesized Web Audio">
+        🔊 <span id="sound-label">Sound: ON</span>
+      </button>
+      <button id="info-btn" class="hud-btn" title="About & Instructions">
+        ❓ <span>Help</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main App Layout -->
+  <main class="app-container">
+    <!-- Left Column: The Thermal Printer Station -->
+    <section class="printer-station">
+      <div class="printer-chassis">
+        <!-- Top Hood & Brand Plate -->
+        <div class="printer-top-hood">
+          <div class="hood-handle" title="Thermal Roll Compartment"></div>
+          <div class="printer-badge" id="brand-plate" title="Click 5 times for a cosmic surprise!">
+            ⚙️ <span>EPSON-NIHILIST-9000</span>
+          </div>
+        </div>
+
+        <!-- LCD Screen with Hardware Status -->
+        <div class="printer-lcd">
+          <div>
+            <div class="lcd-line-1" id="lcd-status">READY: PRINTING EXISTENCE...</div>
+            <div class="lcd-line-2" id="lcd-sub">BUFFER: OK // LINE: 001 // TEMP: 41°C</div>
+          </div>
+          <div class="lcd-indicators">
+            <div class="status-led led-power active" title="Power OK">
+              <div class="led-bulb"></div>
+              <div class="led-label">PWR</div>
+            </div>
+            <div class="status-led led-feed active" id="led-feed" title="Motor Feed Active">
+              <div class="led-bulb"></div>
+              <div class="led-label">FEED</div>
+            </div>
+            <div class="status-led led-error" id="led-error" title="Error / Paper Jam">
+              <div class="led-bulb"></div>
+              <div class="led-label">ERR</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Serrated Mouth Slot -->
+        <div class="printer-mouth-assembly">
+          <div class="tear-blade" title="Serrated Tear Blade"></div>
+          <div class="paper-slot"></div>
+        </div>
+
+        <!-- Physical Hardware Buttons -->
+        <div class="hardware-panel">
+          <button id="btn-feed" class="hw-btn hw-btn-feed" title="Hold or click to manually advance paper (Hotkey: Spacebar)">
+            ⏩ <span>FEED / PRINT</span>
+          </button>
+          <button id="btn-tear" class="hw-btn hw-btn-tear" title="Tear off current receipt into the archive (Hotkey: T)">
+            ✂️ <span>TEAR RECEIPT [T]</span>
+          </button>
+        </div>
+
+        <!-- Print Speed Selector -->
+        <div class="speed-bar">
+          <button class="speed-option" data-speed="0">PAUSE</button>
+          <button class="speed-option" data-speed="2500">SLOW</button>
+          <button class="speed-option active" data-speed="1200">NORMAL</button>
+          <button class="speed-option" data-speed="400">FAST</button>
+          <button class="speed-option" data-speed="120">CHAOS</button>
+        </div>
+      </div>
+
+      <!-- Live Receipt Paper Feed Stream -->
+      <div class="receipt-dropzone">
+        <article class="receipt-paper" id="active-receipt" title="Drag down or scroll to advance receipt!">
+          <!-- Store Header -->
+          <div class="rcpt-header">
+            <div class="rcpt-logo">🛒 🧾 🌌</div>
+            <div class="rcpt-title">SUPERMARKET OF EXISTENCE</div>
+            <div class="rcpt-meta">STORE #666 // LIMBO BRANCH, AISLE 4</div>
+            <div class="rcpt-meta">REGISTER 01 // CASHIER: THE VOID</div>
+            <div class="rcpt-meta" id="rcpt-date-time">2026-11-09 12:00:00 UTC</div>
+            <div class="rcpt-divider"></div>
+            <div class="rcpt-meta">TAX INVOICE / ITEMIZED REGRET STATEMENT</div>
+            <div class="rcpt-meta">*** ALL CHARGES STRICTLY NON-REFUNDABLE ***</div>
+          </div>
+
+          <!-- Items Container -->
+          <div class="rcpt-items-list" id="rcpt-items-list">
+            <!-- Dynamic charges injected here -->
+          </div>
+
+          <!-- Running Subtotals & Totals -->
+          <div class="rcpt-totals-box">
+            <div class="rcpt-divider"></div>
+            <div class="rcpt-total-row">
+              <span>SUBTOTAL (<span id="total-items-count">0</span> ITEMS)</span>
+              <span id="subtotal-val">$0.00</span>
+            </div>
+            <div class="rcpt-total-row">
+              <span>MUNICIPAL SUFFERING SURCHARGE (8.25%)</span>
+              <span id="tax-val">$0.00</span>
+            </div>
+            <div class="rcpt-total-row">
+              <span>EMOTIONAL BAGGAGE TAX</span>
+              <span id="baggage-tax-val">$12.50</span>
+            </div>
+            <div class="rcpt-total-row">
+              <span>COUPON: SURVIVING MONDAY</span>
+              <span style="color:#27ae60;">-$0.05</span>
+            </div>
+            <div class="rcpt-total-grand">
+              <span>TOTAL DEBT:</span>
+              <span id="grand-total-val">$12.45</span>
+            </div>
+          </div>
+
+          <!-- Barcode & Scan Area -->
+          <div class="rcpt-barcode-wrap" id="rcpt-barcode" title="Click or drag laser scanner to scan barcode!">
+            <svg class="barcode-svg" viewBox="0 0 240 40" preserveAspectRatio="none">
+              <!-- Procedural barcode pattern -->
+              <rect x="0" y="0" width="4" height="40" fill="#222"/>
+              <rect x="6" y="0" width="2" height="40" fill="#222"/>
+              <rect x="10" y="0" width="6" height="40" fill="#222"/>
+              <rect x="20" y="0" width="2" height="40" fill="#222"/>
+              <rect x="24" y="0" width="8" height="40" fill="#222"/>
+              <rect x="36" y="0" width="4" height="40" fill="#222"/>
+              <rect x="44" y="0" width="6" height="40" fill="#222"/>
+              <rect x="54" y="0" width="2" height="40" fill="#222"/>
+              <rect x="58" y="0" width="4" height="40" fill="#222"/>
+              <rect x="66" y="0" width="8" height="40" fill="#222"/>
+              <rect x="78" y="0" width="2" height="40" fill="#222"/>
+              <rect x="84" y="0" width="6" height="40" fill="#222"/>
+              <rect x="94" y="0" width="4" height="40" fill="#222"/>
+              <rect x="102" y="0" width="2" height="40" fill="#222"/>
+              <rect x="108" y="0" width="8" height="40" fill="#222"/>
+              <rect x="120" y="0" width="4" height="40" fill="#222"/>
+              <rect x="128" y="0" width="6" height="40" fill="#222"/>
+              <rect x="138" y="0" width="2" height="40" fill="#222"/>
+              <rect x="144" y="0" width="8" height="40" fill="#222"/>
+              <rect x="156" y="0" width="4" height="40" fill="#222"/>
+              <rect x="164" y="0" width="6" height="40" fill="#222"/>
+              <rect x="174" y="0" width="2" height="40" fill="#222"/>
+              <rect x="180" y="0" width="8" height="40" fill="#222"/>
+              <rect x="192" y="0" width="4" height="40" fill="#222"/>
+              <rect x="200" y="0" width="2" height="40" fill="#222"/>
+              <rect x="206" y="0" width="6" height="40" fill="#222"/>
+              <rect x="216" y="0" width="8" height="40" fill="#222"/>
+              <rect x="228" y="0" width="4" height="40" fill="#222"/>
+              <rect x="236" y="0" width="4" height="40" fill="#222"/>
+            </svg>
+            <div class="barcode-digits">404-EXIST-999-DREAD</div>
+            <div class="barcode-scan-hint">🔴 CLICK TO SCAN BARCODE [S]</div>
+          </div>
+
+          <!-- Receipt Footer Quote -->
+          <div class="rcpt-footer">
+            <div class="rcpt-divider"></div>
+            <div>THANK YOU FOR SHOPPING IN MORTALITY!</div>
+            <div>HAVE A MILDLY TOLERABLE REST OF YOUR LIFE.</div>
+            <div style="margin-top:4px;">********************************</div>
+          </div>
+        </article>
+
+        <div class="receipt-paper-edge-bottom"></div>
+      </div>
+    </section>
+
+    <!-- Right Column: Interactive Workbench -->
+    <section class="workbench-column">
+      <!-- Rubber Stamps & Tools Rack -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>🛠️ Interactive Countertop Tools</span>
+          <span style="font-size:10px; font-weight:normal;">CLICK TO EQUIP</span>
+        </div>
+
+        <div class="tools-grid">
+          <button class="tool-button" id="tool-scanner" title="Equip Barcode Laser Scanner (Hotkey: S)">
+            <span class="tool-icon">🔫</span>
+            <span class="tool-label">Laser Scanner [S]</span>
+          </button>
+          <button class="tool-button" data-stamp="paid" title="Rubber Stamp: PAID IN FULL">
+            <span class="tool-icon" style="color:#27ae60;">🟢</span>
+            <span class="tool-label">Stamp: PAID</span>
+          </button>
+          <button class="tool-button" data-stamp="void" title="Rubber Stamp: VOID">
+            <span class="tool-icon" style="color:#c0392b;">🔴</span>
+            <span class="tool-label">Stamp: VOID</span>
+          </button>
+          <button class="tool-button" data-stamp="denied" title="Rubber Stamp: DENIED">
+            <span class="tool-icon" style="color:#e74c3c;">❌</span>
+            <span class="tool-label">Stamp: DENIED</span>
+          </button>
+          <button class="tool-button" data-stamp="guilt" title="Rubber Stamp: PURE GUILT">
+            <span class="tool-icon" style="color:#8e44ad;">💜</span>
+            <span class="tool-label">Stamp: GUILT</span>
+          </button>
+          <button class="tool-button" data-stamp="overdue" title="Rubber Stamp: OVERDUE">
+            <span class="tool-icon" style="color:#d35400;">⚠️</span>
+            <span class="tool-label">Stamp: OVERDUE</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Custom Regret Charge Injector -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>✍️ Inject Custom Life Regret</span>
+        </div>
+        <form id="custom-charge-form" class="custom-charge-form">
+          <input type="text" id="custom-desc" class="charge-input-desc" placeholder="e.g. Buying fresh kale only to let it liquefy" required>
+          <input type="number" id="custom-price" class="charge-input-price" placeholder="$4.99" step="0.01" min="0" required>
+          <button type="submit" class="charge-submit-btn">Print Now 🖨️</button>
+        </form>
+      </div>
+
+      <!-- Torn Receipts Counter & Paper Shredder -->
+      <div class="panel-card">
+        <div class="archive-header">
+          <div class="panel-title" style="margin-bottom:0;">
+            <span>📁 Torn Receipts Archive (<span id="torn-count">0</span>)</span>
+          </div>
+          <div class="archive-stats">TEAR [T] TO DETACH</div>
+        </div>
+
+        <div class="torn-receipts-tray" id="torn-tray">
+          <div style="color:#6d7a8d; font-size:11px; font-style:italic; padding:20px; text-align:center; width:100%;">
+            No receipts torn yet. Press <strong>TEAR RECEIPT [T]</strong> to cut the live receipt and keep it here!
+          </div>
+        </div>
+
+        <!-- Paper Shredder -->
+        <div class="shredder-box" id="shredder-zone" title="Drag a torn slip here or click to shred all archived receipts!">
+          <div style="font-size:18px;">🗑️ ⚙️ ⚡</div>
+          <div style="font-size:12px; font-weight:700; color:#ff4757; margin-top:4px;">
+            HIGH-SECURITY EXISTENTIAL SHREDDER
+          </div>
+          <div class="shredder-slot-visual"></div>
+          <div style="font-size:10px; color:#8c9ba5;">
+            Chew up and destroy all regret records into paper confetti
+          </div>
+          <button id="btn-shred-all" class="shredder-btn">Shred All Archived Receipts</button>
+        </div>
+      </div>
+
+      <!-- Ledger & Existential Statistics -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>📊 Live Regret Ledger</span>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-value" id="stat-printed-count">0</div>
+            <div class="stat-card-label">Charges Itemized</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-value" id="stat-total-debt">$0.00</div>
+            <div class="stat-card-label">Total Debt Accrued</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-value" id="stat-shredded-count">0</div>
+            <div class="stat-card-label">Charges Shredded</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Barcode Scan Result & Help Modal -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div class="modal-card">
+      <button id="modal-close-btn" class="modal-close">&times;</button>
+      <div id="modal-content">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+
+<script>window.__BORED_AI_SLUG__="infinite-receipt-printer";</script>
+<script src="report-widget.js"></script>
+</body>
+</html>

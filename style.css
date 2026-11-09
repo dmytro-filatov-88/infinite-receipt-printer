@@ -1,0 +1,1107 @@
+:root {
+  --bg-color: #12151c;
+  --counter-color: #1a1e28;
+  --counter-border: #2a3142;
+  --printer-body: #d8d4cd;
+  --printer-shadow: #b2aca0;
+  --printer-dark: #2c2d30;
+  --printer-accent: #3a3d45;
+  --printer-slot: #151618;
+  --paper-bg: #faf8f2;
+  --paper-ink: #1f2124;
+  --paper-ink-faint: #4b4e54;
+  --paper-shadow: rgba(0, 0, 0, 0.25);
+  --laser-red: #ff3344;
+  --led-green: #2ecc71;
+  --led-red: #e74c3c;
+  --led-amber: #f39c12;
+  --led-blue: #3498db;
+  --stamp-red: #c0392b;
+  --stamp-blue: #2980b9;
+  --stamp-purple: #8e44ad;
+  --stamp-gold: #d35400;
+  --font-mono: 'Courier New', Courier, 'Lucida Console', Monaco, monospace;
+  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  background-color: var(--bg-color);
+  background-image: 
+    radial-gradient(ellipse at 50% 20%, rgba(52, 73, 94, 0.3) 0%, transparent 70%),
+    linear-gradient(180deg, #0e1117 0%, #171b24 100%);
+  color: #ecf0f1;
+  font-family: var(--font-ui);
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Header & Top Bar */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(18, 21, 28, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--counter-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  font-size: 26px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+
+.brand-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+}
+
+.brand-subtitle {
+  font-size: 11px;
+  color: #8c9ba5;
+  font-family: var(--font-mono);
+  letter-spacing: 0.8px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hud-btn {
+  background: #252b38;
+  color: #e0e6ed;
+  border: 1px solid #3d4659;
+  border-radius: 6px;
+  padding: 7px 13px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.hud-btn:hover {
+  background: #323b4e;
+  border-color: #55627d;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.hud-btn:active {
+  transform: translateY(1px);
+}
+
+.easter-egg-btn {
+  background: linear-gradient(135deg, #8e44ad, #d35400);
+  border-color: #9b59b6;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(155, 89, 182, 0.3);
+}
+
+.easter-egg-btn:hover {
+  box-shadow: 0 0 15px rgba(230, 126, 34, 0.6);
+  background: linear-gradient(135deg, #9b59b6, #e67e22);
+}
+
+/* Main Container Layout */
+.app-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px 16px 80px;
+  display: grid;
+  grid-template-columns: 460px 1fr;
+  gap: 28px;
+}
+
+@media (max-width: 980px) {
+  .app-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Printer Station Column */
+.printer-station {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.printer-chassis {
+  width: 100%;
+  max-width: 440px;
+  background: linear-gradient(175deg, #e4e0d7 0%, #c8c2b5 85%, #b5ad9e 100%);
+  border-radius: 20px 20px 14px 14px;
+  box-shadow: 
+    0 12px 30px rgba(0, 0, 0, 0.6),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid #aba394;
+  padding: 18px 20px 14px;
+  position: relative;
+  z-index: 10;
+}
+
+.printer-chassis::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 5%;
+  width: 90%;
+  height: 12px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.5), transparent 75%);
+  z-index: -1;
+}
+
+/* Printer Top Plate & Paper Roll Door */
+.printer-top-hood {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #a8a090;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+
+.hood-handle {
+  width: 70px;
+  height: 8px;
+  background: #a39b8b;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.printer-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #433e38;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.printer-badge:hover {
+  background: rgba(0,0,0,0.06);
+}
+
+/* Printer LCD Status Screen */
+.printer-lcd {
+  background: #1e3321;
+  border: 3px solid #142316;
+  border-radius: 6px;
+  padding: 8px 12px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8);
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  color: #55f36e;
+  text-shadow: 0 0 6px rgba(85, 243, 110, 0.7);
+}
+
+.lcd-line-1 {
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.lcd-line-2 {
+  font-size: 10px;
+  color: #38b44c;
+}
+
+.lcd-indicators {
+  display: flex;
+  gap: 8px;
+}
+
+.status-led {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.led-bulb {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #333;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+  transition: all 0.15s ease;
+}
+
+.led-label {
+  font-size: 8px;
+  color: #6d665b;
+  font-family: var(--font-mono);
+  font-weight: bold;
+}
+
+.led-power.active .led-bulb {
+  background: var(--led-green);
+  box-shadow: 0 0 8px var(--led-green);
+}
+
+.led-feed.active .led-bulb {
+  background: var(--led-blue);
+  box-shadow: 0 0 8px var(--led-blue);
+}
+
+.led-error.active .led-bulb {
+  background: var(--led-red);
+  box-shadow: 0 0 8px var(--led-red);
+}
+
+/* Paper Feed Mouth & Serrated Tear Blade */
+.printer-mouth-assembly {
+  background: #252629;
+  border-radius: 8px;
+  padding: 8px 10px 4px;
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.8);
+  border: 1px solid #18191a;
+  position: relative;
+}
+
+.tear-blade {
+  height: 8px;
+  width: 100%;
+  background: linear-gradient(180deg, #7a828e 0%, #4b515b 100%);
+  border-radius: 2px;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+/* Serrated cutter teeth */
+.tear-blade::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-image: linear-gradient(135deg, #3a3f47 25%, transparent 25%),
+                    linear-gradient(225deg, #3a3f47 25%, transparent 25%);
+  background-size: 8px 6px;
+  background-repeat: repeat-x;
+}
+
+.paper-slot {
+  height: 14px;
+  background: #090a0c;
+  border-radius: 3px;
+  margin-top: 4px;
+  position: relative;
+  overflow: visible;
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.9);
+}
+
+/* Physical Hardware Buttons on Printer */
+.hardware-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #bfb7a7;
+}
+
+.hw-btn {
+  background: linear-gradient(180deg, #f0eee8 0%, #c4bdb0 100%);
+  border: 1px solid #8e8677;
+  border-bottom: 3px solid #736b5d;
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #332f28;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex: 1;
+  text-align: center;
+  transition: all 0.08s ease;
+}
+
+.hw-btn:hover {
+  background: linear-gradient(180deg, #f7f5ef 0%, #cfc8bc 100%);
+}
+
+.hw-btn:active, .hw-btn.pressed {
+  border-bottom: 1px solid #736b5d;
+  transform: translateY(2px);
+  background: #beb7aa;
+}
+
+.hw-btn-feed {
+  background: linear-gradient(180deg, #62d683 0%, #2fa351 100%);
+  border-color: #237c3d;
+  border-bottom-color: #1a5e2e;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  font-size: 12px;
+}
+
+.hw-btn-feed:hover {
+  background: linear-gradient(180deg, #71e091 0%, #35b35a 100%);
+}
+
+.hw-btn-feed:active, .hw-btn-feed.pressed {
+  background: #278f45;
+}
+
+.hw-btn-tear {
+  background: linear-gradient(180deg, #ff7675 0%, #d63031 100%);
+  border-color: #b71516;
+  border-bottom-color: #8c0f10;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+.hw-btn-tear:hover {
+  background: linear-gradient(180deg, #ff8b8a 0%, #e03b3c 100%);
+}
+
+.hw-btn-tear:active {
+  background: #b52526;
+}
+
+/* Speed Selector Pills */
+.speed-bar {
+  display: flex;
+  background: #313338;
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+  margin-top: 10px;
+}
+
+.speed-option {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #a4acb9;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 5px 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.speed-option:hover {
+  color: #ffffff;
+}
+
+.speed-option.active {
+  background: #4a5468;
+  color: #55f36e;
+  font-weight: bold;
+}
+
+/* Receipt Paper Flow Area */
+.receipt-dropzone {
+  width: 100%;
+  max-width: 410px;
+  margin-top: -8px;
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The Live Scrolling Receipt Paper */
+.receipt-paper {
+  width: 100%;
+  background-color: var(--paper-bg);
+  background-image: 
+    radial-gradient(rgba(0,0,0,0.02) 1px, transparent 0),
+    linear-gradient(180deg, rgba(240, 237, 227, 0.9) 0%, rgba(250, 248, 242, 1) 40px);
+  background-size: 8px 8px, 100% 100%;
+  color: var(--paper-ink);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.45;
+  padding: 24px 20px 30px;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.2),
+    inset -3px 0 6px rgba(0,0,0,0.03),
+    inset 3px 0 6px rgba(0,0,0,0.03);
+  border-left: 1px dashed rgba(0,0,0,0.1);
+  border-right: 1px dashed rgba(0,0,0,0.1);
+  position: relative;
+  min-height: 250px;
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #bbb #eee;
+  cursor: grab;
+  transition: transform 0.1s ease;
+}
+
+.receipt-paper:active {
+  cursor: grabbing;
+}
+
+/* Paper Bottom Jagged Tear Edge */
+.receipt-paper-edge-bottom {
+  width: 100%;
+  height: 10px;
+  background-image: 
+    linear-gradient(45deg, var(--paper-bg) 50%, transparent 50%),
+    linear-gradient(-45deg, var(--paper-bg) 50%, transparent 50%);
+  background-size: 10px 10px;
+  background-repeat: repeat-x;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+  margin-top: -1px;
+}
+
+/* Receipt Header / Content Styling */
+.rcpt-header {
+  text-align: center;
+  border-bottom: 1px dashed #777;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.rcpt-logo {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.rcpt-title {
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.rcpt-meta {
+  font-size: 10.5px;
+  color: var(--paper-ink-faint);
+  line-height: 1.35;
+}
+
+.rcpt-divider {
+  border-top: 1px dashed #888;
+  margin: 10px 0;
+}
+
+.rcpt-double-divider {
+  border-top: 1px double #555;
+  border-bottom: 1px double #555;
+  height: 4px;
+  margin: 10px 0;
+}
+
+/* Receipt Items */
+.rcpt-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rcpt-item-row {
+  display: flex;
+  flex-direction: column;
+  animation: fadeInLine 0.25s ease-out forwards;
+}
+
+@keyframes fadeInLine {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rcpt-item-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-weight: 600;
+}
+
+.rcpt-item-desc {
+  flex: 1;
+  padding-right: 8px;
+  word-break: break-word;
+}
+
+.rcpt-item-price {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rcpt-item-sub {
+  font-size: 10px;
+  color: #666;
+  font-style: italic;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Receipt Totals & Summary */
+.rcpt-totals-box {
+  margin-top: 14px;
+  padding-top: 8px;
+  border-top: 1px dashed #888;
+}
+
+.rcpt-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  margin-bottom: 3px;
+}
+
+.rcpt-total-grand {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 900;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 2px solid #222;
+}
+
+/* Barcode & QR Code Section */
+.rcpt-barcode-wrap {
+  text-align: center;
+  margin: 16px 0 8px;
+  padding: 8px;
+  cursor: pointer;
+  border: 1px dashed transparent;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.rcpt-barcode-wrap:hover {
+  background: rgba(0,0,0,0.03);
+  border-color: #aaa;
+}
+
+.barcode-svg {
+  width: 90%;
+  height: 48px;
+  display: block;
+  margin: 0 auto;
+}
+
+.barcode-digits {
+  font-size: 11px;
+  letter-spacing: 3px;
+  margin-top: 4px;
+}
+
+.barcode-scan-hint {
+  font-size: 9px;
+  color: #777;
+  font-family: var(--font-ui);
+}
+
+.rcpt-footer {
+  text-align: center;
+  font-size: 10px;
+  color: #666;
+  margin-top: 10px;
+  line-height: 1.35;
+}
+
+/* Rubber Stamps applied on receipt */
+.rubber-stamp {
+  position: absolute;
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border: 4px solid;
+  border-radius: 8px;
+  letter-spacing: 2px;
+  pointer-events: none;
+  opacity: 0.88;
+  mask-image: radial-gradient(circle, black 70%, rgba(0,0,0,0.7) 100%);
+  -webkit-mask-image: radial-gradient(circle, black 70%, rgba(0,0,0,0.7) 100%);
+  animation: stampSlam 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  z-index: 20;
+}
+
+@keyframes stampSlam {
+  0% {
+    transform: scale(2.2) rotate(var(--stamp-angle, 0deg));
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(var(--stamp-angle, 0deg));
+    opacity: 0.88;
+  }
+}
+
+.stamp-paid {
+  color: #27ae60;
+  border-color: #27ae60;
+}
+
+.stamp-void {
+  color: #c0392b;
+  border-color: #c0392b;
+}
+
+.stamp-denied {
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+.stamp-guilt {
+  color: #8e44ad;
+  border-color: #8e44ad;
+}
+
+.stamp-overdue {
+  color: #d35400;
+  border-color: #d35400;
+}
+
+/* Laser Scanner Beam Overlay */
+.laser-beam-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  display: none;
+}
+
+.laser-beam-line {
+  position: absolute;
+  height: 3px;
+  width: 280px;
+  background: #ff2a44;
+  box-shadow: 
+    0 0 10px #ff2a44,
+    0 0 20px #ff0022,
+    0 0 40px rgba(255, 0, 34, 0.8);
+  border-radius: 2px;
+  transform: translate(-50%, -50%);
+  animation: laserPulse 0.1s infinite alternate;
+}
+
+@keyframes laserPulse {
+  0% { opacity: 0.85; height: 2px; }
+  100% { opacity: 1; height: 4px; }
+}
+
+/* Interactive Workbench Column (Right) */
+.workbench-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel-card {
+  background: var(--counter-color);
+  border: 1px solid var(--counter-border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.panel-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #8ca0b8;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Tools Rack: Barcode Scanner & Stamps */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.tool-button {
+  background: #252c3b;
+  border: 1px solid #3d475c;
+  border-radius: 8px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: #e0e7f0;
+  transition: all 0.15s ease;
+}
+
+.tool-button:hover {
+  background: #313a4d;
+  border-color: #586885;
+  transform: translateY(-2px);
+}
+
+.tool-button.active {
+  background: #1e3a5f;
+  border-color: #3b82f6;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+}
+
+.tool-icon {
+  font-size: 24px;
+}
+
+.tool-label {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Custom Regret Injector */
+.custom-charge-form {
+  display: flex;
+  gap: 10px;
+}
+
+.charge-input-desc {
+  flex: 3;
+  background: #12161f;
+  border: 1px solid #363f52;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #ffffff;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.charge-input-price {
+  flex: 1;
+  background: #12161f;
+  border: 1px solid #363f52;
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: #ffffff;
+  font-size: 13px;
+  font-family: var(--font-mono);
+}
+
+.charge-input-desc:focus, .charge-input-price:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+}
+
+.charge-submit-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.charge-submit-btn:hover {
+  background: #2563eb;
+}
+
+/* Torn Receipts Archive & Shredder */
+.archive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.archive-stats {
+  font-size: 11px;
+  color: #7b8c9d;
+  font-family: var(--font-mono);
+}
+
+.torn-receipts-tray {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 8px 4px 14px;
+  min-height: 180px;
+  scrollbar-width: thin;
+  scrollbar-color: #333d4d transparent;
+}
+
+.torn-slip {
+  min-width: 170px;
+  max-width: 170px;
+  background: #faf8f2;
+  color: #222;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  padding: 10px;
+  border-radius: 2px 2px 0 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  position: relative;
+  cursor: pointer;
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+  max-height: 220px;
+}
+
+.torn-slip:hover {
+  transform: scale(1.04) rotate(0deg);
+  z-index: 10;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.torn-slip-edge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background-image: 
+    linear-gradient(45deg, #faf8f2 50%, transparent 50%),
+    linear-gradient(-45deg, #faf8f2 50%, transparent 50%);
+  background-size: 6px 6px;
+  background-repeat: repeat-x;
+}
+
+.torn-slip-actions {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: none;
+  gap: 4px;
+}
+
+.torn-slip:hover .torn-slip-actions {
+  display: flex;
+}
+
+.mini-action-btn {
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  width: 22px;
+  height: 22px;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mini-action-btn:hover {
+  background: #ff4757;
+}
+
+/* Paper Shredder Area */
+.shredder-box {
+  background: linear-gradient(180deg, #2a2e38 0%, #1c1f26 100%);
+  border: 2px dashed #475368;
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.shredder-box:hover, .shredder-box.dragover {
+  border-color: #ff4757;
+  background: rgba(255, 71, 87, 0.08);
+}
+
+.shredder-slot-visual {
+  width: 80%;
+  height: 8px;
+  background: #0d0f13;
+  margin: 8px auto;
+  border-radius: 4px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.9);
+}
+
+.shredder-btn {
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background 0.15s;
+}
+
+.shredder-btn:hover {
+  background: #ff6b81;
+}
+
+/* Running Ledger Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.stat-card {
+  background: #171b24;
+  border: 1px solid #283040;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+.stat-card-value {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  color: #55f36e;
+  margin-bottom: 2px;
+}
+
+.stat-card-label {
+  font-size: 10px;
+  color: #7b8a9e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Modal Popup (Scanner Dialog / Help) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: #1c212c;
+  border: 1px solid #374257;
+  border-radius: 14px;
+  padding: 24px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #8c9ba5;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: #fff;
+}
+
+/* Universe Audit Cosmic Mode Easter Egg */
+body.cosmic-audit-mode {
+  animation: cosmicPulse 3s infinite alternate;
+}
+
+@keyframes cosmicPulse {
+  0% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(90deg) saturate(1.5); }
+  100% { filter: hue-rotate(180deg); }
+}
+
+body.cosmic-audit-mode .printer-lcd {
+  background: #3e104d;
+  color: #ff76f9;
+  text-shadow: 0 0 10px #ff76f9;
+  border-color: #63177d;
+}
+
+body.cosmic-audit-mode .receipt-paper {
+  background-color: #fffaf0;
+  box-shadow: 0 0 35px rgba(255, 120, 240, 0.4);
+}
+
+/* Confetti Particle Canvas */
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9000;
+}
